@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import getWeb3 from "./utils/getWeb3";
+import getBlockchain from "./utils/ethers";
+import MyTahsinToken from "./contracts/MyTahsinToken.json";
+import "./App.css";
 
 function App() {
+  const contractAddress = "0xD42390245b5003b0a2B23b46b2E9FD8445e94d08";
+  let provider,
+    signer,
+    erc20,
+    noProviderAbort = true;
+  const [acc, setAcc] = useState("HA");
+  const [simpleStorage, setSimpleStorage] = useState(undefined);
+  const [data, setData] = useState(undefined);
+  /* useEffect(() => {
+    const init = async () => {
+      try {
+        const web3 = await getWeb3();
+        console.log(web3);
+        const accounts = await web3?.eth?.getAccounts();
+        setAcc(accounts);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    init();
+  }, []); */
+  useEffect(() => {
+    const init = async () => {
+      const { simpleStorage } = await getBlockchain();
+      const data = await simpleStorage.balanceOf(contractAddress);
+      console.log({ data });
+      /* setSimpleStorage(simpleStorage);
+      setData(data); */
+    };
+    init();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div style={{ color: "red" }}>{acc}</div>
+      <header className="App-header"></header>
     </div>
   );
 }
